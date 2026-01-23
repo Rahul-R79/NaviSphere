@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
+import axios from 'axios';
 import MapCanvas from '../Components/Map/MapCanvas';
 import { setMapData } from '../store/mapSlice';
 
@@ -7,24 +8,19 @@ const MapBuilder = () => {
     const dispatch = useDispatch();
 
     useEffect(() => {
-        // TODO: Replace with Real API Call (Developer A Integration)
-        // axios.get('/api/map').then(...);
-
-        // DEMO DATA for verification
-        const demoData = {
-            mapImage: 'https://via.placeholder.com/800x600?text=Hospital+Floor+Plan',
-            nodes: [
-                { id: '1', x: 100, y: 100, type: 'room' },
-                { id: '2', x: 300, y: 100, type: 'turn' },
-                { id: '3', x: 300, y: 300, type: 'room' },
-            ],
-            edges: [
-                { from: '1', to: '2' },
-                { from: '2', to: '3' },
-            ]
+        const fetchMapData = async () => {
+            try {
+                const response = await axios.get('http://localhost:3000/api/map');
+                // Backend returns { nodes: [], edges: [], mapImage: null }
+                if (response.data) {
+                    dispatch(setMapData(response.data));
+                }
+            } catch (error) {
+                console.error("Failed to fetch map data:", error);
+            }
         };
 
-        dispatch(setMapData(demoData));
+        fetchMapData();
     }, [dispatch]);
 
     return (
