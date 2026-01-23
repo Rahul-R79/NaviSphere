@@ -1,0 +1,25 @@
+{
+  "name": "pathpulse",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "install:all": "npm install && npm install --prefix Frontend && npm install --prefix Backend",
+    "dev": "concurrently \"npm run dev --prefix Frontend\" \"npm run dev --prefix Backend\"",
+    "format": "prettier --write ."
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.2",
+    "prettier": "3.8.1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Rahul-R79/PathPulse.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Rahul-R79/PathPulse/issues"
+  },
+  "homepage": "https://github.com/Rahul-R79/PathPulse#readme"
+}
