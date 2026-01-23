@@ -49,7 +49,7 @@ This plan details the "Full Setup" for the first two critical features.
 
 ### Step 1: Global Store (`Frontend/src/store/useAppStore.js`)
 
-- Use `zustand`.
+- Use `Redux`.
 - State: `nodes`, `edges`, `mapImage`, `scale`.
 - Actions: `setMapData()`, `updateNode()`.
 

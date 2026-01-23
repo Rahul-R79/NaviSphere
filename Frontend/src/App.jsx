@@ -1,8 +1,14 @@
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import MapBuilder from './Pages/MapBuilder';
+
 function App() {
   return (
-    <div>
-      <h1>PathPulse</h1>
-    </div>
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<Navigate to="/builder" />} />
+        <Route path="/builder" element={<MapBuilder />} />
+      </Routes>
+    </BrowserRouter>
   );
 }
 
