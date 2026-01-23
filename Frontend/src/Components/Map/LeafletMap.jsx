@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import { MapContainer, TileLayer, Marker, Popup, Polyline, useMap } from 'react-leaflet';
+import { MapContainer, TileLayer, Marker, Popup, Polyline, useMap, ZoomControl } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
 import { MapPin, Navigation } from 'lucide-react';
+import ImageModal from './ImageModal';
 
 // Fix for default Leaflet marker icons imports missing in Webpack/Vite
 import icon from 'leaflet/dist/images/marker-icon.png';
@@ -33,6 +34,7 @@ const BoundsFitter = ({ nodes }) => {
 
 const LeafletMap = ({ mapData, path = [], onNodeClick, userPosition }) => {
     const { nodes, edges } = mapData || {};
+    const [selectedNode, setSelectedNode] = useState(null);
 
     // Default center (will be overridden by BoundsFitter)
     const defaultCenter = [12.868, 74.842]; // Mangalore approx
@@ -43,9 +45,11 @@ const LeafletMap = ({ mapData, path = [], onNodeClick, userPosition }) => {
                 center={defaultCenter}
                 zoom={18}
                 scrollWheelZoom={true}
+                zoomControl={false}
                 className="w-full h-full"
                 style={{ background: '#0f172a' }} // Match app theme
             >
+                <ZoomControl position="bottomright" />
                 {/* Dark Mode Map Tiles */}
                 <TileLayer
                     attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OSM</a>'
@@ -85,14 +89,34 @@ const LeafletMap = ({ mapData, path = [], onNodeClick, userPosition }) => {
                         key={node.id}
                         position={[node.lat, node.lng]}
                         eventHandlers={{
-                            click: () => onNodeClick && onNodeClick(node),
+                            click: () => {
+                                if (onNodeClick) onNodeClick(node);
+                                if (node.imgUrl) setSelectedNode(node);
+                            },
                         }}
+                        icon={node.imgUrl ? L.divIcon({
+                            className: 'bg-transparent',
+                            html: `<div style="
+                                width: 60px; 
+                                height: 60px; 
+                                background-image: url('${node.imgUrl}'); 
+                                background-size: cover;
+                                background-position: center;
+                                border: 3px solid white; 
+                                border-radius: 50%; 
+                                box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.5);
+                            "></div>`,
+                            iconSize: [60, 60],
+                            iconAnchor: [30, 30]
+                        }) : DefaultIcon}
                     >
-                        <Popup className="text-black">
-                            <span className="font-bold">{node.label}</span>
-                            <br />
-                            <span className="text-xs text-gray-500">{node.type}</span>
-                        </Popup>
+                        {!node.imgUrl && (
+                            <Popup className="text-black">
+                                <span className="font-bold">{node.label}</span>
+                                <br />
+                                <span className="text-xs text-gray-500">{node.type}</span>
+                            </Popup>
+                        )}
                     </Marker>
                 ))}
 
@@ -114,6 +138,14 @@ const LeafletMap = ({ mapData, path = [], onNodeClick, userPosition }) => {
                     />
                 )}
             </MapContainer>
+
+            {/* Node Image Modal */}
+            <ImageModal
+                isOpen={!!selectedNode}
+                onClose={() => setSelectedNode(null)}
+                imageUrl={selectedNode?.imgUrl}
+                title={selectedNode?.label}
+            />
         </div>
     );
 };

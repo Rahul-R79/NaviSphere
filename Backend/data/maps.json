@@ -10,7 +10,8 @@
         "lng": 76.8905,
         "floor": 0,
         "type": "exit",
-        "label": "Main Entrance"
+        "label": "Main Entrance",
+        "imgUrl": "/images/main entrance.jpeg"
       },
       {
         "id": "n_parking",
@@ -18,7 +19,8 @@
         "lng": 76.8909,
         "floor": 0,
         "type": "poi",
-        "label": "Parking"
+        "label": "Parking",
+        "imgUrl": "/images/parking.jpeg"
       },
       {
         "id": "n_node_main",
@@ -26,7 +28,8 @@
         "lng": 76.8907,
         "floor": 0,
         "type": "turn",
-        "label": "node main"
+        "label": "node main",
+        "imgUrl": "/images/node_main.jpeg"
       },
       {
         "id": "n_playground",
@@ -34,7 +37,8 @@
         "lng": 76.8904,
         "floor": 0,
         "type": "poi",
-        "label": "playground"
+        "label": "playground",
+        "imgUrl": "/images/playground.jpeg"
       },
       {
         "id": "n_pond",
@@ -42,7 +46,8 @@
         "lng": 76.891,
         "floor": 0,
         "type": "poi",
-        "label": "pond"
+        "label": "pond",
+        "imgUrl": "/images/pond.jpeg"
       },
       {
         "id": "n_collegefront",
@@ -50,7 +55,8 @@
         "lng": 76.89105813475307,
         "floor": 0,
         "type": "poi",
-        "label": "collegefront"
+        "label": "collegefront",
+        "imgUrl": "/images/collagefront.jpeg"
       },
       {
         "id": "n_block_b",
@@ -58,7 +64,8 @@
         "lng": 76.8915,
         "floor": 0,
         "type": "room",
-        "label": "Block B"
+        "label": "Block B",
+        "imgUrl": "/images/Block B.jpeg"
       },
       {
         "id": "n_node2_canteen",
@@ -66,7 +73,8 @@
         "lng": 76.89157388722927,
         "floor": 0,
         "type": "turn",
-        "label": "node2_canteen"
+        "label": "node2_canteen",
+        "imgUrl": "/images/node2_canteen.jpeg"
       },
       {
         "id": "n_canteen",
@@ -74,7 +82,8 @@
         "lng": 76.89206721109632,
         "floor": 0,
         "type": "poi",
-        "label": "canteen"
+        "label": "canteen",
+        "imgUrl": "/images/canteen.jpeg"
       },
       {
         "id": "n_node3_collegefront",
@@ -82,7 +91,8 @@
         "lng": 76.89091824005857,
         "floor": 0,
         "type": "turn",
-        "label": "node3_collagefront"
+        "label": "node3_collagefront",
+        "imgUrl": "/images/node3_collagefront.jpeg"
       },
       {
         "id": "n_block_c",
@@ -90,7 +100,8 @@
         "lng": 76.89082714583887,
         "floor": 0,
         "type": "room",
-        "label": "block C"
+        "label": "block C",
+        "imgUrl": "/images/block C.jpeg"
       },
       {
         "id": "n_admin",
@@ -98,7 +109,8 @@
         "lng": 76.89151685921642,
         "floor": 0,
         "type": "poi",
-        "label": "principal ofc"
+        "label": "principal ofc",
+        "imgUrl": "/images/principal ofc.jpeg"
       },
       {
         "id": "n_lift",
@@ -106,7 +118,8 @@
         "lng": 76.89151035248646,
         "floor": 0,
         "type": "transition",
-        "label": "lift"
+        "label": "lift",
+        "imgUrl": "/images/lift.jpeg"
       },
       {
         "id": "n_stairs",
@@ -114,35 +127,166 @@
         "lng": 76.89131515058716,
         "floor": 0,
         "type": "transition",
-        "label": "stair case"
+        "label": "stair case",
+        "imgUrl": "/images/stair case.jpeg"
       }
     ],
     "edges": [
-      { "from": "n_main", "to": "n_node_main", "distance": 80 },
-      { "from": "n_main", "to": "n_parking", "distance": 50 },
-      { "from": "n_node_main", "to": "n_block_b", "distance": 35 },
-      { "from": "n_node_main", "to": "n_playground", "distance": 40 },
-      { "from": "n_playground", "to": "n_collegefront", "distance": 40 },
-      { "from": "n_collegefront", "to": "n_node2_canteen", "distance": 50 },
-      { "from": "n_node2_canteen", "to": "n_block_b", "distance": 40 },
-      { "from": "n_node2_canteen", "to": "n_canteen", "distance": 30 },
-      { "from": "n_collegefront", "to": "n_node3_collegefront", "distance": 30 },
-      { "from": "n_node3_collegefront", "to": "n_block_c", "distance": 30 },
-      { "from": "n_collegefront", "to": "n_admin", "distance": 20 },
-      { "from": "n_admin", "to": "n_lift", "distance": 15 },
-      { "from": "n_admin", "to": "n_stairs", "distance": 15 },
-      { "from": "n_node_main", "to": "n_pond", "distance": 25 }
+      {
+        "from": "n_main",
+        "to": "n_node_main",
+        "distance": 80
+      },
+      {
+        "from": "n_main",
+        "to": "n_parking",
+        "distance": 50
+      },
+      {
+        "from": "n_node_main",
+        "to": "n_block_b",
+        "distance": 35
+      },
+      {
+        "from": "n_node_main",
+        "to": "n_playground",
+        "distance": 40
+      },
+      {
+        "from": "n_playground",
+        "to": "n_collegefront",
+        "distance": 40
+      },
+      {
+        "from": "n_collegefront",
+        "to": "n_node2_canteen",
+        "distance": 50
+      },
+      {
+        "from": "n_node2_canteen",
+        "to": "n_block_b",
+        "distance": 40
+      },
+      {
+        "from": "n_node2_canteen",
+        "to": "n_canteen",
+        "distance": 30
+      },
+      {
+        "from": "n_collegefront",
+        "to": "n_node3_collegefront",
+        "distance": 30
+      },
+      {
+        "from": "n_node3_collegefront",
+        "to": "n_block_c",
+        "distance": 30
+      },
+      {
+        "from": "n_collegefront",
+        "to": "n_admin",
+        "distance": 20
+      },
+      {
+        "from": "n_admin",
+        "to": "n_lift",
+        "distance": 15
+      },
+      {
+        "from": "n_admin",
+        "to": "n_stairs",
+        "distance": 15
+      },
+      {
+        "from": "n_node_main",
+        "to": "n_pond",
+        "distance": 25
+      }
     ],
     "pois": [
-      { "id": "p1", "nodeId": "n_admin", "name": "Principal Office", "tags": ["office", "admin"] },
-      { "id": "p2", "nodeId": "n_canteen", "name": "Canteen", "tags": ["food", "lunch"] },
-      { "id": "p3", "nodeId": "n_parking", "name": "Parking Area", "tags": ["parking", "vehicle"] },
-      { "id": "p4", "nodeId": "n_playground", "name": "Playground", "tags": ["sport", "play"] },
-      { "id": "p5", "nodeId": "n_main", "name": "Main Entrance", "tags": ["entry", "gate"] },
-      { "id": "p6", "nodeId": "n_block_b", "name": "Academic Block B", "tags": ["study", "class"] },
-      { "id": "p7", "nodeId": "n_block_c", "name": "Academic Block C", "tags": ["study", "class"] },
-      { "id": "p8", "nodeId": "n_pond", "name": "Pond", "tags": ["nature", "water"] }
+      {
+        "id": "p1",
+        "nodeId": "n_admin",
+        "name": "Principal Office",
+        "tags": [
+          "office",
+          "admin"
+        ]
+      },
+      {
+        "id": "p2",
+        "nodeId": "n_canteen",
+        "name": "Canteen",
+        "tags": [
+          "food",
+          "lunch"
+        ]
+      },
+      {
+        "id": "p3",
+        "nodeId": "n_parking",
+        "name": "Parking Area",
+        "tags": [
+          "parking",
+          "vehicle"
+        ]
+      },
+      {
+        "id": "p4",
+        "nodeId": "n_playground",
+        "name": "Playground",
+        "tags": [
+          "sport",
+          "play"
+        ]
+      },
+      {
+        "id": "p5",
+        "nodeId": "n_main",
+        "name": "Main Entrance",
+        "tags": [
+          "entry",
+          "gate"
+        ]
+      },
+      {
+        "id": "p6",
+        "nodeId": "n_block_b",
+        "name": "Academic Block B",
+        "tags": [
+          "study",
+          "class"
+        ]
+      },
+      {
+        "id": "p7",
+        "nodeId": "n_block_c",
+        "name": "Academic Block C",
+        "tags": [
+          "study",
+          "class"
+        ]
+      },
+      {
+        "id": "p8",
+        "nodeId": "n_pond",
+        "name": "Pond",
+        "tags": [
+          "nature",
+          "water"
+        ]
+      }
     ],
     "visualGuidance": []
+  },
+  {
+    "id": "e37df5ba-b478-4f3c-a121-9caa7a399862",
+    "name": "New Map",
+    "nodes": [],
+    "edges": [],
+    "mapImage": null,
+    "pois": [],
+    "visualGuidance": [],
+    "infoBubbles": []
   }
 ]

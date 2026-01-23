@@ -1,7 +1,18 @@
 import React, { useRef, useEffect, useState } from 'react';
-import { Plus, Minus } from 'lucide-react';
+import { Plus, Minus, Camera } from 'lucide-react';
+import ImageModal from './ImageModal';
 
-const MapCanvas = ({ mapData, path = [], onNodeClick, userPosition }) => {
+const MapCanvas = ({
+    mapData,
+    path = [],
+    onNodeClick,
+    userPosition,
+    // Editor Props
+    isEditing = false,
+    activeTool = 'select',
+    onAddNode,
+    onConnectNodes
+}) => {
     const canvasRef = useRef(null);
     const containerRef = useRef(null);
     const [scale, setScale] = useState(1);
@@ -10,10 +21,18 @@ const MapCanvas = ({ mapData, path = [], onNodeClick, userPosition }) => {
     const [dragStart, setDragStart] = useState({ x: 0, y: 0 });
     const [dimensions, setDimensions] = useState({ width: window.innerWidth, height: window.innerHeight });
 
+    // Edge creation state
+    const [edgeStartNode, setEdgeStartNode] = useState(null);
+    const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
+
     const { mapImage, nodes, edges } = mapData || {};
 
     // Load Image
     const [imageObj, setImageObj] = useState(null);
+    const [nodeImages, setNodeImages] = useState({});
+
+    // Modal State
+    const [selectedNode, setSelectedNode] = useState(null);
 
     // Handle Resize
     useEffect(() => {
@@ -32,7 +51,7 @@ const MapCanvas = ({ mapData, path = [], onNodeClick, userPosition }) => {
         return () => window.removeEventListener('resize', handleResize);
     }, []);
 
-    // Load Image & Auto-Fit
+    // Load Map Background Image & Auto-Fit
     useEffect(() => {
         if (mapImage) {
             const img = new Image();
@@ -55,13 +74,29 @@ const MapCanvas = ({ mapData, path = [], onNodeClick, userPosition }) => {
                 setOffset({ x: centerX, y: centerY });
             };
         }
-    }, [mapImage, dimensions.width, dimensions.height]); // Re-run fit on resize if image is loaded? Maybe optional. 
-    // Actually, better to only auto-fit on initial load, but for now this ensures visual consistency.
+    }, [mapImage]); // Only run when mapImage changes
+
+    // Load Node Images
+    useEffect(() => {
+        if (nodes) {
+            const loadedImages = {};
+            nodes.forEach(node => {
+                if (node.imgUrl) {
+                    const img = new Image();
+                    img.src = node.imgUrl;
+                    img.onload = () => {
+                        setNodeImages(prev => ({ ...prev, [node.id]: img }));
+                    };
+                }
+            });
+        }
+    }, [nodes]);
+
 
     // Draw Function
     const draw = () => {
         const canvas = canvasRef.current;
-        if (!canvas || !imageObj) return;
+        if (!canvas) return; // Need canvas at least
         const ctx = canvas.getContext('2d');
 
         // Clear and set transform
@@ -76,7 +111,9 @@ const MapCanvas = ({ mapData, path = [], onNodeClick, userPosition }) => {
         ctx.scale(scale, scale);
 
         // 1. Draw Background Map
-        ctx.drawImage(imageObj, 0, 0);
+        if (imageObj) {
+            ctx.drawImage(imageObj, 0, 0);
+        }
 
         // 2. Draw Edges
         if (edges) {
@@ -92,6 +129,21 @@ const MapCanvas = ({ mapData, path = [], onNodeClick, userPosition }) => {
                     ctx.stroke();
                 }
             });
+        }
+
+        // 2.5 Draw Ghost Edge (Connecting)
+        if (isEditing && activeTool === 'edge' && edgeStartNode) {
+            const worldMouseX = (mousePos.x - offset.x) / scale;
+            const worldMouseY = (mousePos.y - offset.y) / scale;
+
+            ctx.beginPath();
+            ctx.moveTo(edgeStartNode.x, edgeStartNode.y);
+            ctx.lineTo(worldMouseX, worldMouseY);
+            ctx.strokeStyle = '#22c55e'; // Green 500
+            ctx.lineWidth = 3;
+            ctx.setLineDash([10, 5]);
+            ctx.stroke();
+            ctx.setLineDash([]);
         }
 
         // 3. Draw Active Path (Highlight)
@@ -112,26 +164,54 @@ const MapCanvas = ({ mapData, path = [], onNodeClick, userPosition }) => {
         if (nodes) {
             nodes.forEach(node => {
                 const isPathNode = path && path.find(p => p.id === node.id);
+                const isSelected = selectedNode && selectedNode.id === node.id;
+                const isEdgeStart = edgeStartNode && edgeStartNode.id === node.id;
+
+                const nodeImg = nodeImages[node.id];
+                const nodeRadius = isPathNode || isSelected ? 15 : 8;
 
                 ctx.beginPath();
-                ctx.arc(node.x, node.y, isPathNode ? 12 : 6, 0, 2 * Math.PI);
-                ctx.fillStyle = isPathNode ? '#06b6d4' : '#ffffff';
-                ctx.fill();
+                ctx.arc(node.x, node.y, nodeRadius, 0, 2 * Math.PI);
 
-                if (isPathNode) {
-                    ctx.strokeStyle = '#fff';
+                // Draw Image thumbnail or color
+                if (nodeImg) {
+                    ctx.save();
+                    ctx.clip();
+                    // Simple cover logic
+                    const aspect = nodeImg.width / nodeImg.height;
+                    let drawWidth = nodeRadius * 2;
+                    let drawHeight = nodeRadius * 2;
+
+                    if (aspect > 1) {
+                        drawHeight = drawWidth / aspect;
+                    } else {
+                        drawWidth = drawHeight * aspect;
+                    }
+                    ctx.drawImage(nodeImg, node.x - nodeRadius, node.y - nodeRadius, nodeRadius * 2, nodeRadius * 2);
+                    ctx.restore();
+
+                    // Add a border
+                    ctx.strokeStyle = isPathNode || isSelected ? '#06b6d4' : '#fff';
                     ctx.lineWidth = 2;
                     ctx.stroke();
+                } else {
+                    ctx.fillStyle = isPathNode || isSelected || isEdgeStart ? '#06b6d4' : '#ffffff';
+                    ctx.fill();
+                    if (isPathNode || isSelected) {
+                        ctx.strokeStyle = '#fff';
+                        ctx.lineWidth = 2;
+                        ctx.stroke();
+                    }
                 }
 
                 // Label
-                if (scale > 0.8 || node.type === 'poi' || isPathNode) {
+                if (scale > 0.8 || node.type === 'poi' || isPathNode || node.imgUrl || isEditing) {
                     ctx.fillStyle = '#fff';
                     ctx.font = 'bold 14px "Outfit", sans-serif';
                     ctx.textAlign = 'center';
                     ctx.shadowColor = "black";
                     ctx.shadowBlur = 4;
-                    ctx.fillText(node.label || node.id, node.x, node.y - 15);
+                    ctx.fillText(node.label || node.id, node.x, node.y - (nodeRadius + 8));
                     ctx.shadowBlur = 0; // reset
                 }
             });
@@ -158,22 +238,97 @@ const MapCanvas = ({ mapData, path = [], onNodeClick, userPosition }) => {
 
     useEffect(() => {
         draw();
-    }, [imageObj, nodes, edges, path, scale, offset, userPosition, dimensions]);
+    }, [imageObj, nodes, edges, path, scale, offset, userPosition, dimensions, nodeImages, mousePos, edgeStartNode, selectedNode]);
 
     // Event Handlers for Pan/Zoom
     const handleMouseDown = (e) => {
-        setIsDragging(true);
-        setDragStart({ x: e.clientX - offset.x, y: e.clientY - offset.y });
+        setIsDragging(false); // Reset drag state
+        setDragStart({ x: e.clientX, y: e.clientY }); // Store raw client coords for drag detection
     };
 
     const handleMouseMove = (e) => {
-        if (isDragging) {
-            setOffset({ x: e.clientX - dragStart.x, y: e.clientY - dragStart.y });
+        // Track mouse world pos for ghost lines
+        const rect = canvasRef.current.getBoundingClientRect();
+        setMousePos({ x: e.clientX - rect.left, y: e.clientY - rect.top });
+
+        if (e.buttons === 1) { // Left mouse button down
+            // Calculate distance moved
+            const dx = e.clientX - dragStart.x;
+            const dy = e.clientY - dragStart.y;
+
+            if (Math.abs(dx) > 5 || Math.abs(dy) > 5) {
+                // If actively dragging to create edge, don't pan
+                if (isEditing && activeTool === 'edge' && edgeStartNode) return;
+
+                setIsDragging(true);
+                setOffset(prev => ({ x: prev.x + e.movementX, y: prev.y + e.movementY }));
+            }
         }
     };
 
-    const handleMouseUp = () => {
+    const handleMouseUp = (e) => {
+        if (!isDragging) {
+            // It was a click
+            handleCanvasClick(e);
+        }
         setIsDragging(false);
+    };
+
+    const handleCanvasClick = (e) => {
+        const rect = canvasRef.current.getBoundingClientRect();
+        const clickX = e.clientX - rect.left;
+        const clickY = e.clientY - rect.top;
+
+        // Convert to world coordinates
+        const worldX = (clickX - offset.x) / scale;
+        const worldY = (clickY - offset.y) / scale;
+
+        // Check collision with nodes
+        const CLICK_RADIUS = 20 / scale; // Adjust click area based on scale
+
+        // Find clicked node (iterate effectively)
+        const clickedNode = nodes.find(node => {
+            const dist = Math.sqrt(Math.pow(node.x - worldX, 2) + Math.pow(node.y - worldY, 2));
+            return dist < (Math.max(10, 10 / scale)); // Use a reasonable hit radius
+        });
+
+        if (isEditing) {
+            if (activeTool === 'select') {
+                if (clickedNode) {
+                    if (onNodeClick) onNodeClick(clickedNode);
+                    setSelectedNode(clickedNode);
+                } else {
+                    setSelectedNode(null);
+                    if (onNodeClick) onNodeClick(null);
+                }
+            } else if (activeTool === 'node') {
+                if (!clickedNode && onAddNode) {
+                    onAddNode({ x: worldX, y: worldY });
+                }
+            } else if (activeTool === 'edge') {
+                if (clickedNode) {
+                    if (!edgeStartNode) {
+                        setEdgeStartNode(clickedNode);
+                    } else {
+                        if (edgeStartNode.id !== clickedNode.id) {
+                            if (onConnectNodes) onConnectNodes(edgeStartNode.id, clickedNode.id);
+                        }
+                        setEdgeStartNode(null); // Reset after connect attempt
+                    }
+                } else {
+                    // Clicked empty space cancel edge
+                    setEdgeStartNode(null);
+                }
+            }
+        } else {
+            // Viewer Mode logic
+            if (clickedNode) {
+                if (onNodeClick) onNodeClick(clickedNode);
+                if (clickedNode.imgUrl) {
+                    setSelectedNode(clickedNode);
+                }
+            }
+        }
     };
 
     const handleWheel = (e) => {
@@ -189,6 +344,12 @@ const MapCanvas = ({ mapData, path = [], onNodeClick, userPosition }) => {
 
     return (
         <div ref={containerRef} className="w-full h-full bg-slate-900 overflow-hidden relative">
+            {!imageObj && (
+                <div className="absolute inset-0 flex flex-col items-center justify-center text-gray-500 pointer-events-none">
+                    <p className="text-xl font-bold mb-2">No Map Loaded</p>
+                    <p className="text-sm">Upload a floor plan using the toolbar to begin.</p>
+                </div>
+            )}
             <canvas
                 ref={canvasRef}
                 width={dimensions.width}
@@ -196,9 +357,9 @@ const MapCanvas = ({ mapData, path = [], onNodeClick, userPosition }) => {
                 onMouseDown={handleMouseDown}
                 onMouseMove={handleMouseMove}
                 onMouseUp={handleMouseUp}
-                onMouseLeave={handleMouseUp}
+                onMouseLeave={() => { setIsDragging(false); setEdgeStartNode(null); }}
                 onWheel={handleWheel}
-                className="cursor-move touch-none"
+                className={`touch-none ${isEditing && activeTool === 'node' ? 'cursor-crosshair' : 'cursor-move'}`}
             />
             {/* Styled Zoom Controls */}
             <div className="absolute bottom-6 right-6 flex flex-col gap-2 z-20">
@@ -217,6 +378,14 @@ const MapCanvas = ({ mapData, path = [], onNodeClick, userPosition }) => {
                     <Minus size={20} />
                 </button>
             </div>
+
+            {/* Node Image Modal - Only show in non-edit mode or active selection in select tool if it has image */}
+            <ImageModal
+                isOpen={!!selectedNode && !isEditing}
+                onClose={() => setSelectedNode(null)}
+                imageUrl={selectedNode?.imgUrl}
+                title={selectedNode?.label}
+            />
         </div>
     );
 };
