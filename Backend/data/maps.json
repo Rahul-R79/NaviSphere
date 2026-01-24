@@ -1,7 +1,7 @@
 [
   {
     "id": "map-campus-1",
-    "name": "Srinivas Institute Campus",
+    "name": "St Thomas College",
     "scale": 1,
     "nodes": [
       {
@@ -208,73 +208,49 @@
         "id": "p1",
         "nodeId": "n_admin",
         "name": "Principal Office",
-        "tags": [
-          "office",
-          "admin"
-        ]
+        "tags": ["office", "admin"]
       },
       {
         "id": "p2",
         "nodeId": "n_canteen",
         "name": "Canteen",
-        "tags": [
-          "food",
-          "lunch"
-        ]
+        "tags": ["food", "lunch"]
       },
       {
         "id": "p3",
         "nodeId": "n_parking",
         "name": "Parking Area",
-        "tags": [
-          "parking",
-          "vehicle"
-        ]
+        "tags": ["parking", "vehicle"]
       },
       {
         "id": "p4",
         "nodeId": "n_playground",
         "name": "Playground",
-        "tags": [
-          "sport",
-          "play"
-        ]
+        "tags": ["sport", "play"]
       },
       {
         "id": "p5",
         "nodeId": "n_main",
         "name": "Main Entrance",
-        "tags": [
-          "entry",
-          "gate"
-        ]
+        "tags": ["entry", "gate"]
       },
       {
         "id": "p6",
         "nodeId": "n_block_b",
         "name": "Academic Block B",
-        "tags": [
-          "study",
-          "class"
-        ]
+        "tags": ["study", "class"]
       },
       {
         "id": "p7",
         "nodeId": "n_block_c",
         "name": "Academic Block C",
-        "tags": [
-          "study",
-          "class"
-        ]
+        "tags": ["study", "class"]
       },
       {
         "id": "p8",
         "nodeId": "n_pond",
         "name": "Pond",
-        "tags": [
-          "nature",
-          "water"
-        ]
+        "tags": ["nature", "water"]
       }
     ],
     "visualGuidance": []

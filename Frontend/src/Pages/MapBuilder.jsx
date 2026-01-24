@@ -29,7 +29,6 @@ const MapBuilder = () => {
     const activeMap = maps[activeMapIndex] || maps[0];
 
     // Initial Load
-    // Initial Load
     useEffect(() => {
         const fetchMaps = async () => {
             try {
@@ -258,7 +257,6 @@ const MapBuilder = () => {
                 setActiveTool={(tool) => { setActiveTool(tool); setSelectedNode(null); }}
                 showMapManager={showMapManager}
                 onToggleMapManager={() => {
-                    console.log("Toggling Map Manager. Current state:", showMapManager);
                     setShowMapManager(!showMapManager);
                 }}
                 onSave={handleSave}

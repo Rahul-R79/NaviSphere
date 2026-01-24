@@ -7,7 +7,6 @@ const MapCanvas = ({
     path = [],
     onNodeClick,
     userPosition,
-    // Editor Props
     isEditing = false,
     activeTool = 'select',
     onAddNode,
@@ -21,13 +20,11 @@ const MapCanvas = ({
     const [dragStart, setDragStart] = useState({ x: 0, y: 0 });
     const [dimensions, setDimensions] = useState({ width: window.innerWidth, height: window.innerHeight });
 
-    // Edge creation state
     const [edgeStartNode, setEdgeStartNode] = useState(null);
     const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
 
     const { mapImage, nodes, edges } = mapData || {};
 
-    // Load Image
     const [imageObj, setImageObj] = useState(null);
     const [nodeImages, setNodeImages] = useState({});
 
@@ -65,7 +62,7 @@ const MapCanvas = ({
 
                 const scaleX = width / img.width;
                 const scaleY = height / img.height;
-                const fitScale = Math.min(scaleX, scaleY) * 0.9; // 90% fit
+                const fitScale = Math.min(scaleX, scaleY) * 0.9; 
 
                 const centerX = (width - img.width * fitScale) / 2;
                 const centerY = (height - img.height * fitScale) / 2;
@@ -76,7 +73,7 @@ const MapCanvas = ({
         } else {
             setImageObj(null);
         }
-    }, [mapImage]); // Only run when mapImage changes
+    }, [mapImage]); 
 
     // Load Node Images
     useEffect(() => {
@@ -98,14 +95,14 @@ const MapCanvas = ({
     // Draw Function
     const draw = () => {
         const canvas = canvasRef.current;
-        if (!canvas) return; // Need canvas at least
+        if (!canvas) return; 
         const ctx = canvas.getContext('2d');
 
         // Clear and set transform
         ctx.clearRect(0, 0, canvas.width, canvas.height);
 
         // Draw background for transparency check (optional, keeping dark)
-        ctx.fillStyle = '#0f172a'; // slate-900 to match app
+        ctx.fillStyle = '#0f172a'; 
         ctx.fillRect(0, 0, canvas.width, canvas.height);
 
         ctx.save();
@@ -119,7 +116,7 @@ const MapCanvas = ({
 
         // 2. Draw Edges
         if (edges) {
-            ctx.strokeStyle = 'rgba(100, 149, 237, 0.5)'; // Cornflower Blue
+            ctx.strokeStyle = 'rgba(100, 149, 237, 0.5)'; 
             ctx.lineWidth = 5;
             edges.forEach(edge => {
                 const fromNode = nodes.find(n => n.id === edge.from);
@@ -141,7 +138,7 @@ const MapCanvas = ({
             ctx.beginPath();
             ctx.moveTo(edgeStartNode.x, edgeStartNode.y);
             ctx.lineTo(worldMouseX, worldMouseY);
-            ctx.strokeStyle = '#22c55e'; // Green 500
+            ctx.strokeStyle = '#22c55e'; 
             ctx.lineWidth = 3;
             ctx.setLineDash([10, 5]);
             ctx.stroke();
@@ -150,7 +147,7 @@ const MapCanvas = ({
 
         // 3. Draw Active Path (Highlight)
         if (path && path.length > 1) {
-            ctx.strokeStyle = '#06b6d4'; // Cyan-500
+            ctx.strokeStyle = '#06b6d4'; 
             ctx.lineWidth = 8;
             ctx.lineCap = 'round';
             ctx.lineJoin = 'round';
@@ -170,7 +167,7 @@ const MapCanvas = ({
                 const isEdgeStart = edgeStartNode && edgeStartNode.id === node.id;
 
                 const nodeImg = nodeImages[node.id];
-                const baseRadius = isPathNode || isSelected ? 20 : 12; // Adjusted base size for better balance
+                const baseRadius = isPathNode || isSelected ? 20 : 12; 
                 const nodeRadius = baseRadius / scale;
 
                 ctx.beginPath();
@@ -224,7 +221,7 @@ const MapCanvas = ({
         if (userPosition) {
             ctx.beginPath();
             ctx.arc(userPosition.x, userPosition.y, 20 / scale, 0, 2 * Math.PI);
-            ctx.fillStyle = 'rgba(6, 182, 212, 0.3)'; // Cyan pulse
+            ctx.fillStyle = 'rgba(6, 182, 212, 0.3)'; 
             ctx.fill();
 
             ctx.beginPath();
@@ -245,8 +242,8 @@ const MapCanvas = ({
 
     // Event Handlers for Pan/Zoom
     const handleMouseDown = (e) => {
-        setIsDragging(false); // Reset drag state
-        setDragStart({ x: e.clientX, y: e.clientY }); // Store raw client coords for drag detection
+        setIsDragging(false); 
+        setDragStart({ x: e.clientX, y: e.clientY }); 
     };
 
     const handleMouseMove = (e) => {
@@ -254,7 +251,7 @@ const MapCanvas = ({
         const rect = canvasRef.current.getBoundingClientRect();
         setMousePos({ x: e.clientX - rect.left, y: e.clientY - rect.top });
 
-        if (e.buttons === 1) { // Left mouse button down
+        if (e.buttons === 1) { 
             // Calculate distance moved
             const dx = e.clientX - dragStart.x;
             const dy = e.clientY - dragStart.y;
@@ -287,12 +284,12 @@ const MapCanvas = ({
         const worldY = (clickY - offset.y) / scale;
 
         // Check collision with nodes
-        const CLICK_RADIUS = 20 / scale; // Adjust click area based on scale
+        const CLICK_RADIUS = 20 / scale; 
 
         // Find clicked node (iterate effectively)
         const clickedNode = nodes.find(node => {
             const dist = Math.sqrt(Math.pow(node.x - worldX, 2) + Math.pow(node.y - worldY, 2));
-            return dist < (Math.max(20, 20 / scale)); // Use a reasonable hit radius
+            return dist < (Math.max(20, 20 / scale)); 
         });
 
         if (isEditing) {
@@ -316,7 +313,7 @@ const MapCanvas = ({
                         if (edgeStartNode.id !== clickedNode.id) {
                             if (onConnectNodes) onConnectNodes(edgeStartNode.id, clickedNode.id);
                         }
-                        setEdgeStartNode(null); // Reset after connect attempt
+                        setEdgeStartNode(null); 
                     }
                 } else {
                     // Clicked empty space cancel edge

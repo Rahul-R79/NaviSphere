@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { Navigation, Map as MapIcon, ChevronRight } from 'lucide-react';
-import LeafletMap from '../Components/Map/LeafletMap'; // Import LeafletMap
+import LeafletMap from '../Components/Map/LeafletMap';
 
 
 
 import { findPath } from '../utils/pathfinding';
 import axios from 'axios';
-import MapCanvas from '../Components/Map/MapCanvas'; // Restore import I accidentally removed earlier? No, it's missing in lines 1-38 view.
+import MapCanvas from '../Components/Map/MapCanvas';
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:3000/api';
 
@@ -25,25 +25,18 @@ const MapNavigator = () => {
         const loadMaps = async () => {
             const allMaps = [];
 
-            // 1. Add Hardcoded/Built-in Campus Map
             const campusMap = {
                 id: 'map-campus-1',
-                name: 'College Campus (Built-in)',
-                // Fetching its nodes/edges would typically require a separate API call or hardcoded data. 
-                // For now, let's try to fetch it via the existing API if possible, or just skip if it relies on LeafletMap.
-                // Wait, the user said "collage map is not there". The original MapPage used 'map-campus-1'.
-                // Let's assume we can fetch it.
+                name: 'St Thomas College (Built-in)',
             };
-            // Actually, the original MapPage checks `fetchMapData('map-campus-1')`.
 
             try {
-                // Try backend for all maps
                 const res = await axios.get(`${API_BASE_URL}/map`);
                 if (res.data && Array.isArray(res.data)) {
                     allMaps.push(...res.data);
                 }
             } catch (err) {
-                console.log("Backend map fetch failed or empty", err);
+
             }
 
             // Merge with Local Storage
@@ -60,38 +53,27 @@ const MapNavigator = () => {
                 }
             }
 
-            // If we still don't have the "Campus Map" explicitly, and if the backend returns nothing,
-            // we might be missing it. 
-            // However, the USER said "collage map is not there".
-            // It seems 'map-campus-1' was the ID used in MapPage.jsx. 
-            // Let's explicitly try to fetch that one specific map if it's not in the list.
             if (!allMaps.find(m => m.id === 'map-campus-1')) {
                 try {
                     const campusRes = await axios.get(`${API_BASE_URL}/map/map-campus-1`);
                     if (campusRes.data) {
-                        // Give it a name if missing
-                        const campusData = { ...campusRes.data, name: campusRes.data.name || 'College Campus' };
-                        allMaps.unshift(campusData); // Put it first
+                        const campusData = { ...campusRes.data, name: campusRes.data.name || 'St Thomas College' };
+                        allMaps.unshift(campusData);
                     }
                 } catch (e) {
-                    // ignore if not found
                 }
             }
 
-            // Filter out empty/junk maps (e.g. "New Map" with no nodes)
             const validMaps = allMaps.filter(m => {
                 if (m.name === 'New Map' && (!m.nodes || m.nodes.length === 0)) return false;
                 return true;
             });
 
-            // Ensure uniqueness by ID one last time (just in case)
             const uniqueMaps = Array.from(new Map(validMaps.map(m => [m.id, m])).values());
 
             setMaps(uniqueMaps);
 
-            // Set active map logic
             if (uniqueMaps.length > 0) {
-                // Prefer the campus map if available and no active map selected
                 const campus = uniqueMaps.find(m => m.id === 'map-campus-1');
                 if (campus) setActiveMapId(campus.id);
                 else setActiveMapId(uniqueMaps[0].id);
