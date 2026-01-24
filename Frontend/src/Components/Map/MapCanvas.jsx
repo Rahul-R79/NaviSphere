@@ -73,6 +73,8 @@ const MapCanvas = ({
                 setScale(fitScale);
                 setOffset({ x: centerX, y: centerY });
             };
+        } else {
+            setImageObj(null);
         }
     }, [mapImage]); // Only run when mapImage changes
 
@@ -168,7 +170,8 @@ const MapCanvas = ({
                 const isEdgeStart = edgeStartNode && edgeStartNode.id === node.id;
 
                 const nodeImg = nodeImages[node.id];
-                const nodeRadius = isPathNode || isSelected ? 15 : 8;
+                const baseRadius = isPathNode || isSelected ? 20 : 12; // Adjusted base size for better balance
+                const nodeRadius = baseRadius / scale;
 
                 ctx.beginPath();
                 ctx.arc(node.x, node.y, nodeRadius, 0, 2 * Math.PI);
@@ -192,14 +195,14 @@ const MapCanvas = ({
 
                     // Add a border
                     ctx.strokeStyle = isPathNode || isSelected ? '#06b6d4' : '#fff';
-                    ctx.lineWidth = 2;
+                    ctx.lineWidth = 2 / scale;
                     ctx.stroke();
                 } else {
                     ctx.fillStyle = isPathNode || isSelected || isEdgeStart ? '#06b6d4' : '#ffffff';
                     ctx.fill();
                     if (isPathNode || isSelected) {
                         ctx.strokeStyle = '#fff';
-                        ctx.lineWidth = 2;
+                        ctx.lineWidth = 2 / scale;
                         ctx.stroke();
                     }
                 }
@@ -207,11 +210,11 @@ const MapCanvas = ({
                 // Label
                 if (scale > 0.8 || node.type === 'poi' || isPathNode || node.imgUrl || isEditing) {
                     ctx.fillStyle = '#fff';
-                    ctx.font = 'bold 14px "Outfit", sans-serif';
+                    ctx.font = `bold ${14 / scale}px "Outfit", sans-serif`;
                     ctx.textAlign = 'center';
                     ctx.shadowColor = "black";
                     ctx.shadowBlur = 4;
-                    ctx.fillText(node.label || node.id, node.x, node.y - (nodeRadius + 8));
+                    ctx.fillText(node.label || node.id, node.x, node.y - (nodeRadius + (8 / scale)));
                     ctx.shadowBlur = 0; // reset
                 }
             });
@@ -220,16 +223,16 @@ const MapCanvas = ({
         // 5. Draw User Marker (Animated)
         if (userPosition) {
             ctx.beginPath();
-            ctx.arc(userPosition.x, userPosition.y, 20, 0, 2 * Math.PI);
+            ctx.arc(userPosition.x, userPosition.y, 20 / scale, 0, 2 * Math.PI);
             ctx.fillStyle = 'rgba(6, 182, 212, 0.3)'; // Cyan pulse
             ctx.fill();
 
             ctx.beginPath();
-            ctx.arc(userPosition.x, userPosition.y, 10, 0, 2 * Math.PI);
+            ctx.arc(userPosition.x, userPosition.y, 10 / scale, 0, 2 * Math.PI);
             ctx.fillStyle = '#06b6d4';
             ctx.fill();
             ctx.strokeStyle = '#fff';
-            ctx.lineWidth = 3;
+            ctx.lineWidth = 3 / scale;
             ctx.stroke();
         }
 
@@ -289,7 +292,7 @@ const MapCanvas = ({
         // Find clicked node (iterate effectively)
         const clickedNode = nodes.find(node => {
             const dist = Math.sqrt(Math.pow(node.x - worldX, 2) + Math.pow(node.y - worldY, 2));
-            return dist < (Math.max(10, 10 / scale)); // Use a reasonable hit radius
+            return dist < (Math.max(20, 20 / scale)); // Use a reasonable hit radius
         });
 
         if (isEditing) {

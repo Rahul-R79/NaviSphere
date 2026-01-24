@@ -8,7 +8,7 @@ export const getMap = async (req, res) => {
     const { id } = req.params;
 
     if (id) {
-      const map = maps.find(m => m.id === id);
+      const map = maps.find((m) => m.id === id);
       if (map) {
         return res.json(map);
       } else {
@@ -16,7 +16,7 @@ export const getMap = async (req, res) => {
       }
     }
 
-    res.json(maps.length > 0 ? maps[0] : { nodes: [], edges: [], mapImage: null, pois: [], visualGuidance: [], infoBubbles: [] });
+    res.json(maps);
   } catch (error) {
     res.status(500).json({ message: 'Error reading map data' });
   }
@@ -24,12 +24,18 @@ export const getMap = async (req, res) => {
 
 export const saveMap = async (req, res) => {
   try {
+    // Check if bulk save (Array)
+    if (Array.isArray(req.body)) {
+      await writeData(req.body);
+      return res.json({ message: 'Maps saved successfully', maps: req.body });
+    }
+
     const { id, name, nodes, edges, mapImage, pois, visualGuidance, infoBubbles } = req.body;
     let maps = await readData();
 
     if (id) {
       // Update existing map
-      const mapIndex = maps.findIndex(m => m.id === id);
+      const mapIndex = maps.findIndex((m) => m.id === id);
       if (mapIndex > -1) {
         maps[mapIndex] = {
           ...maps[mapIndex],
@@ -44,6 +50,9 @@ export const saveMap = async (req, res) => {
         await writeData(maps);
         return res.json({ message: 'Map updated successfully', map: maps[mapIndex] });
       } else {
+        // If ID provided but not found, treat as new map with that ID?
+        // Or just create new. Let's create new to be safe, or error.
+        // Existing logic returned 404. Let's stick to that for single update.
         return res.status(404).json({ message: 'Map not found for update' });
       }
     } else {
@@ -72,7 +81,7 @@ export const getRoute = async (req, res) => {
   try {
     const { startNodeId, endNodeId, mapId } = req.query;
     const maps = await readData();
-    const targetMap = maps.find(m => m.id === mapId);
+    const targetMap = maps.find((m) => m.id === mapId);
 
     if (!targetMap) {
       return res.status(404).json({ message: 'Map not found for route calculation' });

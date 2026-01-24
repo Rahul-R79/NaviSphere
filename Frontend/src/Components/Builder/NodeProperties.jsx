@@ -67,11 +67,11 @@ const NodeProperties = ({ selectedNode, onUpdate, onDelete, onClose }) => {
                         onChange={handleChange}
                         className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-sm focus:border-cyan-500 focus:outline-none text-white appearance-none"
                     >
-                        <option value="room">Room</option>
-                        <option value="corridor">Corridor (Waypoint)</option>
-                        <option value="elevator">Elevator</option>
-                        <option value="stairs">Stairs</option>
-                        <option value="poi">Point of Interest</option>
+                        <option value="room" className="text-black">Room</option>
+                        <option value="corridor" className="text-black">Corridor (Waypoint)</option>
+                        <option value="elevator" className="text-black">Elevator</option>
+                        <option value="stairs" className="text-black">Stairs</option>
+                        <option value="poi" className="text-black">Point of Interest</option>
                     </select>
                 </div>
 
@@ -83,14 +83,30 @@ const NodeProperties = ({ selectedNode, onUpdate, onDelete, onClose }) => {
                                 type="file"
                                 accept="image/*"
                                 className="hidden"
-                                onChange={(e) => {
+                                onChange={async (e) => {
                                     const file = e.target.files[0];
                                     if (file) {
-                                        const reader = new FileReader();
-                                        reader.onload = (ev) => {
-                                            setFormData(prev => ({ ...prev, imgUrl: ev.target.result }));
-                                        };
-                                        reader.readAsDataURL(file);
+                                        const formData = new FormData();
+                                        formData.append('mapImage', file);
+                                        try {
+                                            // Ideally use a configured axios instance, but direct call is fine for now
+                                            // We need to import axios if not present. I'll handle that separately or assume global? 
+                                            // No, must import. 
+                                            // Since I can only replace one block, I will inject the logic here and hope axios is available or I'll add the import in a subsequent step.
+                                            // Wait, I can't "hope". 
+                                            // I will write the upload logic assuming axios is imported.
+                                            // "const axios = (await import('axios')).default;" dynamic import inside handler works!
+                                            const axios = (await import('axios')).default;
+                                            const res = await axios.post('http://localhost:3000/api/map/upload', formData, {
+                                                headers: { 'Content-Type': 'multipart/form-data' }
+                                            });
+                                            if (res.data && res.data.imageUrl) {
+                                                setFormData(prev => ({ ...prev, imgUrl: res.data.imageUrl }));
+                                            }
+                                        } catch (err) {
+                                            console.error("Upload failed", err);
+                                            alert("Failed to upload image.");
+                                        }
                                     }
                                 }}
                             />

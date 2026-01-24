@@ -278,15 +278,5 @@
       }
     ],
     "visualGuidance": []
-  },
-  {
-    "id": "e37df5ba-b478-4f3c-a121-9caa7a399862",
-    "name": "New Map",
-    "nodes": [],
-    "edges": [],
-    "mapImage": null,
-    "pois": [],
-    "visualGuidance": [],
-    "infoBubbles": []
   }
 ]

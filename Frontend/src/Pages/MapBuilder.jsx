@@ -27,9 +27,33 @@ const MapBuilder = () => {
     const activeMap = maps[activeMapIndex] || maps[0];
 
     // Initial Load
+    // Initial Load
     useEffect(() => {
-        // In a real app, fetch array of maps
-        // For now, start with default empty state or local check
+        const fetchMaps = async () => {
+            try {
+                const res = await axios.get('http://localhost:3000/api/map');
+                if (res.data && Array.isArray(res.data) && res.data.length > 0) {
+                    setMaps(res.data);
+                    // Set active to first map if current active is default/not found
+                    if (!res.data.find(m => m.id === activeMapId)) {
+                        setActiveMapId(res.data[0].id);
+                    }
+                }
+            } catch (error) {
+                console.error("Failed to load maps:", error);
+                // Try fallback to localstorage if backend fails
+                const localMaps = localStorage.getItem('pathpulse_maps');
+                if (localMaps) {
+                    try {
+                        const parsed = JSON.parse(localMaps);
+                        if (Array.isArray(parsed) && parsed.length > 0) {
+                            setMaps(parsed);
+                        }
+                    } catch (e) { }
+                }
+            }
+        };
+        fetchMaps();
     }, []);
 
     // Helper to update current map
@@ -55,28 +79,46 @@ const MapBuilder = () => {
         setActiveMapId(newMap.id);
     };
 
-    const handleDeleteMap = (id) => {
+    const handleDeleteMap = async (id) => {
         if (maps.length <= 1) {
             alert("Cannot delete the last map.");
             return;
         }
         if (window.confirm("Are you sure you want to delete this map?")) {
-            setMaps(prev => prev.filter(m => m.id !== id));
+            const newMaps = maps.filter(m => m.id !== id);
+            setMaps(newMaps);
+
             if (activeMapId === id) {
                 // Switch to first available
-                setActiveMapId(maps.find(m => m.id !== id).id);
+                setActiveMapId(newMaps[0].id);
+            }
+
+            // Validating and Saving
+            const result = await saveMapsToBackend(newMaps);
+            if (!result.success && !result.localSaveSuccess) {
+                alert("Map deleted locally but FAILED to save to backend/storage. It may reappear on refresh.");
             }
         }
     };
 
-    const handleUpload = (e) => {
+    const handleUpload = async (e) => {
         const file = e.target.files[0];
         if (file) {
-            const reader = new FileReader();
-            reader.onload = (event) => {
-                updateActiveMap({ mapImage: event.target.result });
-            };
-            reader.readAsDataURL(file);
+            const formData = new FormData();
+            formData.append('mapImage', file); // Field name must match backend multer config
+
+            try {
+                const res = await axios.post('http://localhost:3000/api/map/upload', formData, {
+                    headers: { 'Content-Type': 'multipart/form-data' }
+                });
+
+                if (res.data && res.data.imageUrl) {
+                    updateActiveMap({ mapImage: res.data.imageUrl });
+                }
+            } catch (error) {
+                console.error("Failed to upload map image:", error);
+                alert("Failed to upload image. Please ensure backend is running.");
+            }
         }
     };
 
@@ -133,24 +175,70 @@ const MapBuilder = () => {
         }
     };
 
-    const handleSave = async () => {
+    const saveMapsToBackend = async (mapsToSave) => {
+        let localSaveSuccess = false;
+        let localError = null;
+
+        // 1. Try Local Storage (Backup)
         try {
-            // Save ALL maps
-            await axios.post('http://localhost:3000/api/map', maps);
-            alert('Maps saved successfully!');
-            dispatch(setMapData(maps)); // Update global state
+            localStorage.setItem('pathpulse_maps', JSON.stringify(mapsToSave));
+            localSaveSuccess = true;
+        } catch (e) {
+            console.warn("Local Storage Error:", e);
+            localError = e;
+        }
+
+        // 2. Try Backend (Primary)
+        try {
+            await axios.post('http://localhost:3000/api/map', mapsToSave);
+            dispatch(setMapData(mapsToSave));
+            return { success: true, localSaveSuccess };
         } catch (error) {
-            console.error("Failed to save map:", error);
-            alert('Failed to save maps (Backend unreachable). Data is in browser state only.');
+            console.error("Backend save failed:", error);
+            return { success: false, localSaveSuccess, localError };
+        }
+    };
+
+    const handleSave = async () => {
+        const result = await saveMapsToBackend(maps);
+        if (result.success) {
+            alert(result.localSaveSuccess ? 'Maps saved successfully!' : 'Maps saved to Server! (Local backup skipped)');
+        } else {
+            if (result.localSaveSuccess) {
+                alert('Backend unreachable, but maps saved to Browser Storage!');
+            } else {
+                alert('Failed to save maps to either Server or Local Storage.');
+            }
         }
     };
 
     const handleClear = () => {
         if (window.confirm("Are you sure you want to clear this map's data?")) {
-            updateActiveMap({ nodes: [], edges: [] });
+            updateActiveMap({ nodes: [], edges: [], mapImage: null });
             setSelectedNode(null);
         }
     }
+
+    const handleRemoveMapImage = async () => {
+        if (window.confirm("Are you sure you want to remove the background map image? Nodes and edges will remain.")) {
+            // Calculate new state immediately
+            const newMaps = [...maps];
+            newMaps[activeMapIndex] = { ...newMaps[activeMapIndex], mapImage: null };
+
+            // Validate changes
+            setMaps(newMaps);
+
+            // Auto-save the change
+            const result = await saveMapsToBackend(newMaps);
+            if (result.success) {
+                // success
+            } else if (result.localSaveSuccess) {
+                alert("Image removed and saved to local storage (Backend unreachable).");
+            } else {
+                alert("Image removed but FAILED to save to backend/storage. Changes will be lost on refresh.");
+            }
+        }
+    };
 
     return (
         <div className="flex flex-col h-full w-full relative">
@@ -166,6 +254,8 @@ const MapBuilder = () => {
                 onSave={handleSave}
                 onClear={handleClear}
                 onUpload={handleUpload}
+                onRemoveImage={handleRemoveMapImage}
+                hasMapImage={!!activeMap.mapImage}
             />
 
             {/* Map Manager Sidebar */}

@@ -24,8 +24,11 @@ const BoundsFitter = ({ nodes }) => {
 
     useEffect(() => {
         if (nodes && nodes.length > 0) {
-            const bounds = nodes.map(n => [n.lat, n.lng]);
-            map.fitBounds(bounds, { padding: [50, 50] });
+            const validNodes = nodes.filter(n => n.lat !== undefined && n.lng !== undefined && n.lat !== null && n.lng !== null);
+            if (validNodes.length > 0) {
+                const bounds = validNodes.map(n => [n.lat, n.lng]);
+                map.fitBounds(bounds, { padding: [50, 50] });
+            }
         }
     }, [nodes, map]);
 
@@ -63,7 +66,7 @@ const LeafletMap = ({ mapData, path = [], onNodeClick, userPosition }) => {
                 {edges && edges.map((edge, i) => {
                     const from = nodes.find(n => n.id === edge.from);
                     const to = nodes.find(n => n.id === edge.to);
-                    if (from && to) {
+                    if (from && to && from.lat != null && from.lng != null && to.lat != null && to.lng != null) {
                         return (
                             <Polyline
                                 key={`edge-${i}`}
@@ -78,13 +81,13 @@ const LeafletMap = ({ mapData, path = [], onNodeClick, userPosition }) => {
                 {/* Active Navigation Path */}
                 {path && path.length > 1 && (
                     <Polyline
-                        positions={path.map(n => [n.lat, n.lng])}
+                        positions={path.filter(n => n.lat != null && n.lng != null).map(n => [n.lat, n.lng])}
                         pathOptions={{ color: '#06b6d4', weight: 6, opacity: 1 }}
                     />
                 )}
 
                 {/* Nodes */}
-                {nodes && nodes.map(node => (
+                {nodes && nodes.filter(n => n.lat != null && n.lng != null).map(node => (
                     <Marker
                         key={node.id}
                         position={[node.lat, node.lng]}
@@ -121,7 +124,7 @@ const LeafletMap = ({ mapData, path = [], onNodeClick, userPosition }) => {
                 ))}
 
                 {/* User Position */}
-                {userPosition && (
+                {userPosition && userPosition.lat != null && userPosition.lng != null && (
                     <Marker
                         position={[userPosition.lat, userPosition.lng]}
                         icon={L.divIcon({

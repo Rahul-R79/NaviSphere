@@ -1,5 +1,5 @@
 import React from 'react';
-import { MousePointer2, MapPin, Share2, Upload, Save, Trash2, Layers } from 'lucide-react';
+import { MousePointer2, MapPin, Share2, Upload, Save, Trash2, Layers, ImageOff } from 'lucide-react';
 
 const tools = [
     { id: 'select', icon: <MousePointer2 size={20} />, label: 'Select' },
@@ -7,7 +7,7 @@ const tools = [
     { id: 'edge', icon: <Share2 size={20} />, label: 'Connect' },
 ];
 
-const BuilderToolbar = ({ activeTool, setActiveTool, onSave, onClear, onUpload, onToggleMapManager, showMapManager }) => {
+const BuilderToolbar = ({ activeTool, setActiveTool, onSave, onClear, onUpload, onToggleMapManager, showMapManager, onRemoveImage, hasMapImage }) => {
     return (
         <div className="absolute top-4 left-4 z-20 flex flex-col gap-2">
             <div className="bg-slate-800 p-2 rounded-xl border border-white/10 shadow-xl flex flex-col gap-2">
@@ -62,6 +62,19 @@ const BuilderToolbar = ({ activeTool, setActiveTool, onSave, onClear, onUpload, 
                         Upload Map
                     </span>
                 </label>
+
+                {hasMapImage && (
+                    <button
+                        onClick={onRemoveImage}
+                        className="p-3 bg-orange-600/20 text-orange-400 hover:bg-orange-600 hover:text-white rounded-lg transition-all relative group"
+                        title="Remove Map Image"
+                    >
+                        <ImageOff size={20} />
+                        <span className="absolute left-full ml-3 px-2 py-1 bg-black/80 text-white text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none">
+                            Remove Image
+                        </span>
+                    </button>
+                )}
             </div>
 
             <div className="bg-slate-800 p-2 rounded-xl border border-white/10 shadow-xl flex flex-col gap-2 mt-2">

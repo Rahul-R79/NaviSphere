@@ -1,34 +1,33 @@
 import React from 'react';
 import { motion } from 'framer-motion';
+import { Building2, GraduationCap, Stethoscope, Plane, ShoppingBag, Landmark } from 'lucide-react';
 
-const stats = [
-    { label: "Buildings Mapped", value: "50+" },
-    { label: "Steps Guided", value: "1M+" },
-    { label: "Daily Users", value: "10k+" },
-    { label: "Accuracy", value: "99%" },
+const industries = [
+    { icon: <GraduationCap size={24} />, label: "Universities" },
+    { icon: <Stethoscope size={24} />, label: "Healthcare" },
+    { icon: <Building2 size={24} />, label: "Corporate Offices" },
+    { icon: <ShoppingBag size={24} />, label: "Shopping Malls" },
+    { icon: <Plane size={24} />, label: "Airports" },
 ];
 
 const StatsSection = () => {
     return (
-        <section className="py-12 bg-slate-900 border-y border-white/5">
-            <div className="max-w-7xl mx-auto px-4">
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
-                    {stats.map((stat, index) => (
-                        <motion.div
-                            key={index}
-                            initial={{ opacity: 0, scale: 0.5 }}
-                            whileInView={{ opacity: 1, scale: 1 }}
-                            viewport={{ once: true }}
-                            transition={{ delay: index * 0.1, type: "spring" }}
-                            className="text-center"
-                        >
-                            <div className="text-4xl md:text-5xl font-bold bg-clip-text text-transparent bg-gradient-to-br from-cyan-400 to-blue-600 mb-2">
-                                {stat.value}
-                            </div>
-                            <div className="text-gray-400 font-medium text-sm uppercase tracking-wider">
-                                {stat.label}
-                            </div>
-                        </motion.div>
+        <section className="py-10 bg-slate-950/50 border-y border-white/5 overflow-hidden">
+            <div className="max-w-7xl mx-auto px-4 flex flex-col md:flex-row items-center justify-between gap-8">
+                <span className="text-gray-500 font-semibold uppercase tracking-widest text-sm whitespace-nowrap">
+                    Perfect for Large Complexes
+                </span>
+
+                <div className="flex flex-wrap justify-center md:justify-end gap-x-8 gap-y-4 opacity-50 contrast-50 grayscale hover:grayscale-0 hover:opacity-100 hover:contrast-100 transition-all duration-500">
+                    {industries.map((item, index) => (
+                        <div key={index} className="flex items-center gap-2 group cursor-default">
+                            <span className="text-cyan-400 group-hover:scale-110 transition-transform duration-300">
+                                {item.icon}
+                            </span>
+                            <span className="text-lg font-semibold text-slate-300">
+                                {item.label}
+                            </span>
+                        </div>
                     ))}
                 </div>
             </div>

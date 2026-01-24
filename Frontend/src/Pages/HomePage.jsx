@@ -23,14 +23,15 @@ const HomePage = () => {
                 <HeroScene />
 
                 {/* Background Gradients */}
-                <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[1000px] h-[600px] bg-blue-600/20 rounded-full blur-[120px] -z-10" />
+                <div className="absolute top-0 left-0 w-[800px] h-[600px] bg-blue-600/10 rounded-full blur-[120px] -z-10" />
                 <div className="absolute bottom-0 right-0 w-[800px] h-[600px] bg-cyan-600/10 rounded-full blur-[100px] -z-10" />
 
-                <div className="max-w-7xl mx-auto text-center relative z-10">
+                <div className="max-w-7xl mx-auto w-full relative z-10 pointer-events-none flex flex-col md:flex-row items-center">
                     <motion.div
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
+                        initial={{ opacity: 0, x: -20 }}
+                        animate={{ opacity: 1, x: 0 }}
                         transition={{ duration: 0.8 }}
+                        className="pointer-events-auto text-center md:text-left md:w-1/2"
                     >
                         <span className="inline-block py-1 px-3 rounded-full bg-white/5 border border-white/10 text-cyan-400 text-sm font-medium mb-6 backdrop-blur-sm">
                             ✨ Next Gen Indoor Navigation
@@ -41,14 +42,14 @@ const HomePage = () => {
                                 Without Getting Lost
                             </span>
                         </h1>
-                        <p className="text-xl text-gray-400 max-w-2xl mx-auto mb-10 leading-relaxed">
+                        <p className="text-xl text-gray-400 max-w-lg mx-auto md:mx-0 mb-10 leading-relaxed">
                             Experience seamless indoor navigation for hospitals, campuses, and large complexes.
                             Real-time pathfinding right at your fingertips.
                         </p>
 
-                        <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+                        <div className="flex flex-col sm:flex-row items-center md:items-start justify-center md:justify-start gap-4">
                             <Link
-                                to="/map"
+                                to="/navigate"
                                 className="w-full sm:w-auto px-8 py-4 bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500 rounded-xl font-bold text-lg shadow-lg shadow-cyan-900/20 transition-all hover:scale-105 flex items-center justify-center gap-2"
                             >
                                 Launch Map <ArrowRight size={20} />
