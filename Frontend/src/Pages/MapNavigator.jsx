@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { Navigation, Map as MapIcon, ChevronRight } from 'lucide-react';
 import LeafletMap from '../Components/Map/LeafletMap';
+import SmartSearchBar from '../Components/Navigation/SmartSearchBar';
 
 
 
@@ -224,6 +225,16 @@ const MapNavigator = () => {
 
                     {activeMap && (
                         <>
+                            {/* AI Smart Search */}
+                            <SmartSearchBar
+                                activeMap={activeMap}
+                                onDestinationFound={(nodeId) => {
+                                    setEndNodeId(nodeId);
+                                    // Optional: Auto-set start node if not set (e.g. to main entrance)
+                                    // if (!startNodeId && activeMap.nodes.length > 0) setStartNodeId(activeMap.nodes[0].id);
+                                }}
+                            />
+
                             {/* Start Point */}
                             <div className="space-y-2">
                                 <label className="text-xs font-semibold text-slate-400 uppercase tracking-wider">Start Location</label>

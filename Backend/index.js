@@ -5,6 +5,7 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import morgan from 'morgan';
 import mapRoutes from './routes/map.routes.js';
+import aiRoutes from './routes/ai.routes.js';
 
 dotenv.config();
 
@@ -37,6 +38,7 @@ app.use(express.urlencoded({ extended: true, limit: '50mb' }));
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 app.use('/api/map', mapRoutes);
+app.use('/api/ai', aiRoutes);
 
 const PORT = process.env.PORT || 3000;
 
