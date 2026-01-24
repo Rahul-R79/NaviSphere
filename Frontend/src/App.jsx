@@ -7,6 +7,7 @@ import MapPage from './Pages/MapPage';
 import MapBuilder from './Pages/MapBuilder';
 import MapNavigator from './Pages/MapNavigator';
 import AdminLogin from './Pages/AdminLogin';
+import InstallPWA from './Components/InstallPWA';
 
 // Simple Protected Route Wrapper
 const ProtectedAdminRoute = ({ children }) => {
@@ -47,6 +48,9 @@ export default function MainApp() {
           <Route path="/navigate" element={<MapNavigator />} />
         </Routes>
       </div>
+
+      {/* PWA Install Prompt */}
+      <InstallPWA />
     </Router>
   );
 }

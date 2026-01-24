@@ -26,8 +26,25 @@ export const saveMap = async (req, res) => {
   try {
     // Check if bulk save (Array)
     if (Array.isArray(req.body)) {
-      await writeData(req.body);
-      return res.json({ message: 'Maps saved successfully', maps: req.body });
+      const existingMaps = await readData();
+      const incomingMaps = req.body;
+
+      // Merge strategy: Update existing maps or add new ones
+      const mergedMaps = [...existingMaps];
+
+      incomingMaps.forEach((incomingMap) => {
+        const existingIndex = mergedMaps.findIndex((m) => m.id === incomingMap.id);
+        if (existingIndex > -1) {
+          // Update existing map
+          mergedMaps[existingIndex] = incomingMap;
+        } else {
+          // Add new map
+          mergedMaps.push(incomingMap);
+        }
+      });
+
+      await writeData(mergedMaps);
+      return res.json({ message: 'Maps saved successfully', maps: mergedMaps });
     }
 
     const { id, name, nodes, edges, mapImage, pois, visualGuidance, infoBubbles } = req.body;
@@ -107,4 +124,25 @@ export const uploadMapImage = (req, res) => {
   // Return the URL that the frontend can use to access the image
   const imageUrl = `http://localhost:3000/uploads/${req.file.filename}`;
   res.json({ imageUrl });
+};
+
+export const deleteMap = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const maps = await readData();
+
+    const mapIndex = maps.findIndex((m) => m.id === id);
+    if (mapIndex === -1) {
+      return res.status(404).json({ message: 'Map not found' });
+    }
+
+    // Remove the map
+    maps.splice(mapIndex, 1);
+    await writeData(maps);
+
+    res.json({ message: 'Map deleted successfully', id });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Error deleting map' });
+  }
 };

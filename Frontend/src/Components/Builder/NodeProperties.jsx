@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { X, Save } from 'lucide-react';
 
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:3000/api';
+
 const NodeProperties = ({ selectedNode, onUpdate, onDelete, onClose }) => {
     const [formData, setFormData] = useState({
         label: '',
@@ -97,7 +99,7 @@ const NodeProperties = ({ selectedNode, onUpdate, onDelete, onClose }) => {
                                             // I will write the upload logic assuming axios is imported.
                                             // "const axios = (await import('axios')).default;" dynamic import inside handler works!
                                             const axios = (await import('axios')).default;
-                                            const res = await axios.post('http://localhost:3000/api/map/upload', formData, {
+                                            const res = await axios.post(`${API_BASE_URL}/map/upload`, formData, {
                                                 headers: { 'Content-Type': 'multipart/form-data' }
                                             });
                                             if (res.data && res.data.imageUrl) {

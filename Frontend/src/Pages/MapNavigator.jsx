@@ -9,6 +9,9 @@ import { findPath } from '../utils/pathfinding';
 import axios from 'axios';
 import MapCanvas from '../Components/Map/MapCanvas'; // Restore import I accidentally removed earlier? No, it's missing in lines 1-38 view.
 
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:3000/api';
+
+
 const MapNavigator = () => {
     const [maps, setMaps] = useState([]);
     const [activeMapId, setActiveMapId] = useState('');
@@ -35,7 +38,7 @@ const MapNavigator = () => {
 
             try {
                 // Try backend for all maps
-                const res = await axios.get('http://localhost:3000/api/map');
+                const res = await axios.get(`${API_BASE_URL}/map`);
                 if (res.data && Array.isArray(res.data)) {
                     allMaps.push(...res.data);
                 }
@@ -64,7 +67,7 @@ const MapNavigator = () => {
             // Let's explicitly try to fetch that one specific map if it's not in the list.
             if (!allMaps.find(m => m.id === 'map-campus-1')) {
                 try {
-                    const campusRes = await axios.get('http://localhost:3000/api/map/map-campus-1');
+                    const campusRes = await axios.get(`${API_BASE_URL}/map/map-campus-1`);
                     if (campusRes.data) {
                         // Give it a name if missing
                         const campusData = { ...campusRes.data, name: campusRes.data.name || 'College Campus' };

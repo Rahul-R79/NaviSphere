@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 
 const Footer = () => {
     return (
@@ -8,8 +9,15 @@ const Footer = () => {
                     &copy; {new Date().getFullYear()} PathPulse. All rights reserved.
                 </p>
                 <p className="text-gray-600 text-xs mt-2">
-                    Indoor Hospital Navigation System
+                    Indoor Navigation System
                 </p>
+                {/* Subtle admin access - hidden in plain sight */}
+                <Link
+                    to="/admin"
+                    className="inline-block mt-4 text-slate-700 hover:text-slate-500 text-xs opacity-50 hover:opacity-100 transition-opacity"
+                >
+                    •
+                </Link>
             </div>
         </footer>
     );

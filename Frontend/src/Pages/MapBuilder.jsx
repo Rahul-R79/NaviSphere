@@ -7,6 +7,8 @@ import BuilderToolbar from '../Components/Builder/BuilderToolbar';
 import NodeProperties from '../Components/Builder/NodeProperties';
 import MapManager from '../Components/Builder/MapManager';
 
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:3000/api';
+
 const MapBuilder = () => {
     const dispatch = useDispatch();
 
@@ -31,7 +33,7 @@ const MapBuilder = () => {
     useEffect(() => {
         const fetchMaps = async () => {
             try {
-                const res = await axios.get('http://localhost:3000/api/map');
+                const res = await axios.get(`${API_BASE_URL}/map`);
                 if (res.data && Array.isArray(res.data) && res.data.length > 0) {
                     setMaps(res.data);
                     // Set active to first map if current active is default/not found
@@ -85,18 +87,26 @@ const MapBuilder = () => {
             return;
         }
         if (window.confirm("Are you sure you want to delete this map?")) {
-            const newMaps = maps.filter(m => m.id !== id);
-            setMaps(newMaps);
+            try {
+                // Call backend DELETE endpoint
+                await axios.delete(`${API_BASE_URL}/map/${id}`);
 
-            if (activeMapId === id) {
-                // Switch to first available
-                setActiveMapId(newMaps[0].id);
-            }
+                // Update local state
+                const newMaps = maps.filter(m => m.id !== id);
+                setMaps(newMaps);
 
-            // Validating and Saving
-            const result = await saveMapsToBackend(newMaps);
-            if (!result.success && !result.localSaveSuccess) {
-                alert("Map deleted locally but FAILED to save to backend/storage. It may reappear on refresh.");
+                if (activeMapId === id) {
+                    // Switch to first available
+                    setActiveMapId(newMaps[0].id);
+                }
+
+                // Update localStorage backup
+                localStorage.setItem('pathpulse_maps', JSON.stringify(newMaps));
+
+                alert("Map deleted successfully!");
+            } catch (error) {
+                console.error("Failed to delete map:", error);
+                alert("Failed to delete map from server. Please try again.");
             }
         }
     };
@@ -108,7 +118,7 @@ const MapBuilder = () => {
             formData.append('mapImage', file); // Field name must match backend multer config
 
             try {
-                const res = await axios.post('http://localhost:3000/api/map/upload', formData, {
+                const res = await axios.post(`${API_BASE_URL}/map/upload`, formData, {
                     headers: { 'Content-Type': 'multipart/form-data' }
                 });
 
@@ -190,7 +200,7 @@ const MapBuilder = () => {
 
         // 2. Try Backend (Primary)
         try {
-            await axios.post('http://localhost:3000/api/map', mapsToSave);
+            await axios.post(`${API_BASE_URL}/map`, mapsToSave);
             dispatch(setMapData(mapsToSave));
             return { success: true, localSaveSuccess };
         } catch (error) {

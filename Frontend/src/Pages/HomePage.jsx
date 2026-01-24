@@ -18,7 +18,7 @@ const HomePage = () => {
         <div className="min-h-screen bg-slate-900 text-white selection:bg-cyan-500/30">
 
             {/* Hero Section */}
-            <section className="relative px-4 pt-32 pb-20 overflow-hidden min-h-[600px] flex items-center">
+            <section className="relative px-4 pt-24 md:pt-32 pb-16 md:pb-20 overflow-hidden min-h-[500px] md:min-h-[600px] flex items-center">
                 {/* 3D Scene Background */}
                 <HeroScene />
 
@@ -31,32 +31,32 @@ const HomePage = () => {
                         initial={{ opacity: 0, x: -20 }}
                         animate={{ opacity: 1, x: 0 }}
                         transition={{ duration: 0.8 }}
-                        className="pointer-events-auto text-center md:text-left md:w-1/2"
+                        className="pointer-events-auto text-center md:text-left md:w-1/2 w-full"
                     >
-                        <span className="inline-block py-1 px-3 rounded-full bg-white/5 border border-white/10 text-cyan-400 text-sm font-medium mb-6 backdrop-blur-sm">
+                        <span className="inline-block py-1 px-3 rounded-full bg-white/5 border border-white/10 text-cyan-400 text-xs md:text-sm font-medium mb-4 md:mb-6 backdrop-blur-sm">
                             ✨ Next Gen Indoor Navigation
                         </span>
-                        <h1 className="text-5xl md:text-7xl font-bold tracking-tight mb-8">
-                            Find Your Way <br />
+                        <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold tracking-tight mb-6 md:mb-8 leading-tight">
+                            Find Your Way <br className="hidden sm:block" />
                             <span className="bg-clip-text text-transparent bg-gradient-to-r from-cyan-400 to-blue-500">
                                 Without Getting Lost
                             </span>
                         </h1>
-                        <p className="text-xl text-gray-400 max-w-lg mx-auto md:mx-0 mb-10 leading-relaxed">
+                        <p className="text-base sm:text-lg md:text-xl text-gray-400 max-w-lg mx-auto md:mx-0 mb-8 md:mb-10 leading-relaxed px-4 md:px-0">
                             Experience seamless indoor navigation for hospitals, campuses, and large complexes.
                             Real-time pathfinding right at your fingertips.
                         </p>
 
-                        <div className="flex flex-col sm:flex-row items-center md:items-start justify-center md:justify-start gap-4">
+                        <div className="flex flex-col sm:flex-row items-center md:items-start justify-center md:justify-start gap-3 md:gap-4 px-4 md:px-0">
                             <Link
                                 to="/navigate"
-                                className="w-full sm:w-auto px-8 py-4 bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500 rounded-xl font-bold text-lg shadow-lg shadow-cyan-900/20 transition-all hover:scale-105 flex items-center justify-center gap-2"
+                                className="w-full sm:w-auto px-6 md:px-8 py-3 md:py-4 bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500 rounded-xl font-bold text-base md:text-lg shadow-lg shadow-cyan-900/20 transition-all hover:scale-105 flex items-center justify-center gap-2"
                             >
-                                Launch Map <ArrowRight size={20} />
+                                Launch Map <ArrowRight size={18} className="md:w-5 md:h-5" />
                             </Link>
                             <button
                                 onClick={scrollToHowItWorks}
-                                className="w-full sm:w-auto px-8 py-4 bg-white/5 border border-white/10 hover:bg-white/10 rounded-xl font-medium text-lg transition-all"
+                                className="w-full sm:w-auto px-6 md:px-8 py-3 md:py-4 bg-white/5 border border-white/10 hover:bg-white/10 rounded-xl font-medium text-base md:text-lg transition-all"
                             >
                                 Learn More
                             </button>

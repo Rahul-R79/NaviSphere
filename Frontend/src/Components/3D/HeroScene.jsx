@@ -184,7 +184,7 @@ const InteractiveGlobe = (props) => {
 
 const HeroScene = () => {
     return (
-        <div className="w-full h-[500px] md:h-screen absolute top-0 right-0 z-0 pointer-events-none md:pointer-events-auto">
+        <div className="w-full h-[500px] md:h-screen absolute top-0 right-0 z-0 pointer-events-none md:pointer-events-auto opacity-30 sm:opacity-50 md:opacity-100">
             {/* Use a separate div for canvas to allow pointer events effectively on the globe */}
             <div className="absolute inset-0 z-10">
                 <Canvas camera={{ position: [0, 0, 8], fov: 45 }} gl={{ antialias: true }}>
