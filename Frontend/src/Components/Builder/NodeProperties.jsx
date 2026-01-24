@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { X, Save } from 'lucide-react';
+import { X, Save, Upload } from 'lucide-react';
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:3000/api';
 
@@ -9,6 +9,7 @@ const NodeProperties = ({ selectedNode, onUpdate, onDelete, onClose }) => {
         type: 'room',
         imgUrl: ''
     });
+    const [isUploading, setIsUploading] = useState(false);
 
     useEffect(() => {
         if (selectedNode) {
@@ -27,6 +28,7 @@ const NodeProperties = ({ selectedNode, onUpdate, onDelete, onClose }) => {
     const handleSubmit = (e) => {
         e.preventDefault();
         onUpdate(selectedNode.id, formData);
+        onClose(); // Close the panel after updating
     };
 
     if (!selectedNode) return null;
@@ -80,24 +82,19 @@ const NodeProperties = ({ selectedNode, onUpdate, onDelete, onClose }) => {
                 <div>
                     <label className="block text-xs font-medium text-gray-400 mb-1">Image (Upload or URL)</label>
                     <div className="flex flex-col gap-2">
-                        <label className="flex items-center gap-2 p-2 bg-white/5 border border-white/10 rounded-lg cursor-pointer hover:bg-white/10 transition-colors">
+                        <label className={`flex items-center gap-2 p-2 bg-white/5 border border-white/10 rounded-lg cursor-pointer hover:bg-white/10 transition-colors ${isUploading ? 'opacity-50 cursor-not-allowed pointer-events-none' : ''}`}>
                             <input
                                 type="file"
                                 accept="image/*"
                                 className="hidden"
+                                disabled={isUploading}
                                 onChange={async (e) => {
                                     const file = e.target.files[0];
                                     if (file) {
+                                        setIsUploading(true);
                                         const formData = new FormData();
                                         formData.append('mapImage', file);
                                         try {
-                                            // Ideally use a configured axios instance, but direct call is fine for now
-                                            // We need to import axios if not present. I'll handle that separately or assume global? 
-                                            // No, must import. 
-                                            // Since I can only replace one block, I will inject the logic here and hope axios is available or I'll add the import in a subsequent step.
-                                            // Wait, I can't "hope". 
-                                            // I will write the upload logic assuming axios is imported.
-                                            // "const axios = (await import('axios')).default;" dynamic import inside handler works!
                                             const axios = (await import('axios')).default;
                                             const res = await axios.post(`${API_BASE_URL}/map/upload`, formData, {
                                                 headers: { 'Content-Type': 'multipart/form-data' }
@@ -108,11 +105,22 @@ const NodeProperties = ({ selectedNode, onUpdate, onDelete, onClose }) => {
                                         } catch (err) {
                                             console.error("Upload failed", err);
                                             alert("Failed to upload image.");
+                                        } finally {
+                                            setIsUploading(false);
                                         }
                                     }
                                 }}
                             />
-                            <span className="text-sm text-cyan-400">Choose File...</span>
+                            <span className="text-sm text-cyan-400">
+                                {isUploading ? (
+                                    <>
+                                        <Upload size={14} className="inline animate-pulse mr-1" />
+                                        Uploading...
+                                    </>
+                                ) : (
+                                    'Choose File...'
+                                )}
+                            </span>
                         </label>
                         <input
                             name="imgUrl"
@@ -127,9 +135,10 @@ const NodeProperties = ({ selectedNode, onUpdate, onDelete, onClose }) => {
                 <div className="flex gap-2 pt-2">
                     <button
                         type="submit"
-                        className="flex-1 bg-cyan-600 hover:bg-cyan-500 text-white py-2 rounded-lg text-sm font-medium flex items-center justify-center gap-2"
+                        disabled={isUploading}
+                        className="flex-1 bg-cyan-600 hover:bg-cyan-500 text-white py-2 rounded-lg text-sm font-medium flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-cyan-600"
                     >
-                        <Save size={16} /> Update
+                        <Save size={16} /> {isUploading ? 'Uploading...' : 'Update'}
                     </button>
                     <button
                         type="button"

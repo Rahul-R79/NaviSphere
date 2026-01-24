@@ -1,6 +1,8 @@
 import { readData, writeData } from '../utils/fileHandler.js';
 import { v4 as uuidv4 } from 'uuid';
 import { findPath } from '../services/pathfinding.service.js';
+import cloudinary from '../config/cloudinary.js';
+import streamifier from 'streamifier';
 
 export const getMap = async (req, res) => {
   try {
@@ -117,13 +119,35 @@ export const getRoute = async (req, res) => {
   }
 };
 
-export const uploadMapImage = (req, res) => {
-  if (!req.file) {
-    return res.status(400).json({ message: 'No file uploaded' });
+export const uploadMapImage = async (req, res) => {
+  try {
+    if (!req.file) {
+      return res.status(400).json({ message: 'No file uploaded' });
+    }
+
+    // Upload to Cloudinary using buffer from multer memory storage
+    const result = await cloudinary.uploader.upload_stream(
+      {
+        folder: 'pathpulse/maps', // Organize uploads in a folder
+        resource_type: 'auto', // Automatically detect file type
+      },
+      (error, result) => {
+        if (error) {
+          console.error('Cloudinary upload error:', error);
+          return res.status(500).json({ message: 'Error uploading to Cloudinary', error });
+        }
+
+        // Return the secure URL from Cloudinary
+        res.json({ imageUrl: result.secure_url });
+      }
+    );
+
+    // Pipe the file buffer to Cloudinary
+    streamifier.createReadStream(req.file.buffer).pipe(result);
+  } catch (error) {
+    console.error('Upload error:', error);
+    res.status(500).json({ message: 'Error uploading image' });
   }
-  // Return the URL that the frontend can use to access the image
-  const imageUrl = `http://localhost:3000/uploads/${req.file.filename}`;
-  res.json({ imageUrl });
 };
 
 export const deleteMap = async (req, res) => {

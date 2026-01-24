@@ -288,5 +288,208 @@
     "pois": [],
     "visualGuidance": [],
     "infoBubbles": []
+  },
+  {
+    "id": "map-1769231339344",
+    "name": "Hospital",
+    "nodes": [
+      {
+        "id": "n_1769231359186",
+        "x": 584.1681681681681,
+        "y": 962.7547547547548,
+        "label": "Reception",
+        "type": "room",
+        "imgUrl": "https://res.cloudinary.com/dzrkowsdy/image/upload/v1769231499/pathpulse/maps/n5wsu71f9bqhclqjytme.jpg"
+      },
+      {
+        "id": "n_1769231365066",
+        "x": 881.4254254254254,
+        "y": 1121.6336336336337,
+        "label": "cornor 1",
+        "type": "room",
+        "imgUrl": ""
+      },
+      {
+        "id": "n_1769231376074",
+        "x": 1027.4914914914914,
+        "y": 1052.4444444444446,
+        "label": "Lab",
+        "type": "room",
+        "imgUrl": "https://res.cloudinary.com/dzrkowsdy/image/upload/v1769231534/pathpulse/maps/mteskxmrwtd6zjr0ynod.jpg"
+      },
+      {
+        "id": "n_1769231380234",
+        "x": 1409.313313313313,
+        "y": 785.937937937938,
+        "label": "Cornor2",
+        "type": "room",
+        "imgUrl": ""
+      },
+      {
+        "id": "n_1769231382550",
+        "x": 1696.3203203203202,
+        "y": 870.5025025025026,
+        "label": "Lift",
+        "type": "room",
+        "imgUrl": "https://res.cloudinary.com/dzrkowsdy/image/upload/v1769231705/pathpulse/maps/l36m7dvixyi5knpdwzq1.jpg"
+      },
+      {
+        "id": "n_1769231384320",
+        "x": 2001.265265265265,
+        "y": 1072.944944944945,
+        "label": "Stair",
+        "type": "room",
+        "imgUrl": "https://res.cloudinary.com/dzrkowsdy/image/upload/v1769231600/pathpulse/maps/urjppssgj5mjtgfw5qz8.jpg"
+      },
+      {
+        "id": "n_1769231386061",
+        "x": 2198.5825825825823,
+        "y": 880.7527527527528,
+        "label": "stair cornor 1",
+        "type": "room",
+        "imgUrl": ""
+      },
+      {
+        "id": "n_1769231390353",
+        "x": 2019.203203203203,
+        "y": 606.5585585585586,
+        "label": "stair cornor 2",
+        "type": "room",
+        "imgUrl": ""
+      },
+      {
+        "id": "n_1769231394630",
+        "x": 1524.6286286286286,
+        "y": 478.43043043043053,
+        "label": "top recption",
+        "type": "room",
+        "imgUrl": ""
+      },
+      {
+        "id": "n_1769231395655",
+        "x": 1319.6236236236234,
+        "y": 383.6156156156157,
+        "label": "ward1",
+        "type": "room",
+        "imgUrl": ""
+      },
+      {
+        "id": "n_1769231396661",
+        "x": 1017.2412412412411,
+        "y": 491.24324324324334,
+        "label": "New Node",
+        "type": "room"
+      },
+      {
+        "id": "n_1769231397782",
+        "x": 2006.3903903903902,
+        "y": 432.3043043043044,
+        "label": "ward 2",
+        "type": "room",
+        "imgUrl": "https://res.cloudinary.com/dzrkowsdy/image/upload/v1769231717/pathpulse/maps/wuw5zejm8sy3sqxsv7as.jpg"
+      },
+      {
+        "id": "n_1769231398964",
+        "x": 2295.9599599599596,
+        "y": 588.6206206206207,
+        "label": "ward 3",
+        "type": "room",
+        "imgUrl": ""
+      },
+      {
+        "id": "n_1769231408747",
+        "x": 2493.277277277277,
+        "y": 847.4394394394395,
+        "label": "waiting area",
+        "type": "room",
+        "imgUrl": ""
+      },
+      {
+        "id": "n_1769231469500",
+        "x": 1601.5055055055054,
+        "y": 726.9989989989991,
+        "label": "Cornor3",
+        "type": "room",
+        "imgUrl": ""
+      }
+    ],
+    "edges": [
+      {
+        "from": "n_1769231359186",
+        "to": "n_1769231365066",
+        "weight": 337
+      },
+      {
+        "from": "n_1769231365066",
+        "to": "n_1769231376074",
+        "weight": 162
+      },
+      {
+        "from": "n_1769231376074",
+        "to": "n_1769231380234",
+        "weight": 466
+      },
+      {
+        "from": "n_1769231380234",
+        "to": "n_1769231382550",
+        "weight": 299
+      },
+      {
+        "from": "n_1769231382550",
+        "to": "n_1769231384320",
+        "weight": 366
+      },
+      {
+        "from": "n_1769231384320",
+        "to": "n_1769231386061",
+        "weight": 275
+      },
+      {
+        "from": "n_1769231386061",
+        "to": "n_1769231390353",
+        "weight": 328
+      },
+      {
+        "from": "n_1769231390353",
+        "to": "n_1769231394630",
+        "weight": 511
+      },
+      {
+        "from": "n_1769231394630",
+        "to": "n_1769231395655",
+        "weight": 226
+      },
+      {
+        "from": "n_1769231395655",
+        "to": "n_1769231396661",
+        "weight": 321
+      },
+      {
+        "from": "n_1769231390353",
+        "to": "n_1769231397782",
+        "weight": 175
+      },
+      {
+        "from": "n_1769231390353",
+        "to": "n_1769231398964",
+        "weight": 277
+      },
+      {
+        "from": "n_1769231380234",
+        "to": "n_1769231469500",
+        "weight": 201
+      },
+      {
+        "from": "n_1769231469500",
+        "to": "n_1769231408747",
+        "weight": 900
+      },
+      {
+        "from": "n_1769231397782",
+        "to": "n_1769231382550",
+        "weight": 537
+      }
+    ],
+    "mapImage": "https://res.cloudinary.com/dzrkowsdy/image/upload/v1769231346/pathpulse/maps/r8oqhaoolxy63fjwd1c2.png"
   }
 ]
