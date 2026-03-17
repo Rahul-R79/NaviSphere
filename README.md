@@ -43,8 +43,8 @@ NaviSphere is an advanced indoor wayfinding application designed for universitie
 1.  **Clone the Repository**
 
     ```bash
-    git clone https://github.com/Rahul-R79/PathPulse.git
-    cd PathPulse
+    git clone https://github.com/Rahul-R79/NaviSphere.git
+    cd NaviSphere
     ```
 
 2.  **Install Dependencies**
