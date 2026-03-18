@@ -66,8 +66,7 @@ const InstallPWA = () => {
                             <Download size={24} className="text-white" />
                         </div>
                         <div className="flex-1">
-                            <h3 className="font-bold text-white mb-1">Install PathPulse</h3>
-
+                            <h3 className="font-bold text-white mb-1">Install NaviSphere</h3>
                             {isIOS ? (
                                 <div className="text-sm text-gray-400 mb-3 space-y-2">
                                     <p>Install this app on your iPhone:</p>
