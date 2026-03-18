@@ -104,7 +104,7 @@ NaviSphere is an advanced indoor wayfinding application designed for universitie
 
 ## 🧠 AI Features
 
-PathPulse uses **Google Gemini** to understand natural language.
+NaviSphere uses **Google Gemini** to understand natural language.
 
 - **User Types**: _"I have a headache"_
 - **AI Analyzes**: Looks at map nodes (Medical Room, Pharmacy, etc.)
@@ -117,16 +117,6 @@ PathPulse uses **Google Gemini** to understand natural language.
 - **Android**: Tapping the "Install" button adds it to the home screen.
 - **iOS**: Tap "Share" -> "Add to Home Screen".
 - **Offline Mode**: Once loaded, maps are cached. You can navigate without internet!
-
----
-
-## 🤝 Contributing
-
-1.  Fork the repo
-2.  Create a feature branch (`git checkout -b feature/amazing-feature`)
-3.  Commit changes (`git commit -m 'Add amazing feature'`)
-4.  Push to branch (`git push origin feature/amazing-feature`)
-5.  Open a Pull Request
 
 ---
 
