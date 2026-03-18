@@ -1,5 +1,5 @@
 {
-  "name": "pathpulse",
+  "name": "navisphere",
   "version": "1.0.0",
   "private": true,
   "scripts": {
@@ -13,13 +13,13 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Rahul-R79/PathPulse.git"
+    "url": "git+https://github.com/Rahul-R79/NaviSphere.git"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/Rahul-R79/PathPulse/issues"
+    "url": "https://github.com/Rahul-R79/NaviSphere/issues"
   },
-  "homepage": "https://github.com/Rahul-R79/PathPulse#readme"
+  "homepage": "https://github.com/Rahul-R79/NaviSphere#readme"
 }

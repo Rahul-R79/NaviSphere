@@ -35,8 +35,8 @@ export default defineConfig({
         ],
       },
       manifest: {
-        name: 'PathPulse - Indoor Navigation',
-        short_name: 'PathPulse',
+        name: 'NaviSphere - Indoor Navigation',
+        short_name: 'NaviSphere',
         description:
           'Smart indoor navigation for hospitals, campuses, and large complexes. Real-time pathfinding at your fingertips.',
         theme_color: '#0f172a',

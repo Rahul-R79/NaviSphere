@@ -4,7 +4,7 @@
 
 NaviSphere is an advanced indoor wayfinding application designed for universities, hospitals, corporate offices, and airports. It solves the "getting lost" problem by providing real-time, interactive navigation without relying on GPS.
 
-![PathPulse Demo](https://media.giphy.com/media/llmrnMkLqcssM6sYG7/giphy.gif)
+![NaviSphere Demo](https://media.giphy.com/media/llmrnMkLqcssM6sYG7/giphy.gif)
 
 ---
 

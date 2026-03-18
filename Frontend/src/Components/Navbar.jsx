@@ -25,7 +25,7 @@ const Navbar = () => {
                             <Navigation size={20} className="text-white" />
                         </div>
                         <span className="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-white to-gray-400">
-                            PathPulse
+                            NaviSphere
                         </span>
                     </div>
 

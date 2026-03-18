@@ -6,7 +6,7 @@ const testimonials = [
     {
         name: "Alex R.",
         role: "Medical Student",
-        text: "Using PathPulse saved me so much time during my first week of residency. I never get lost finding wards anymore!",
+        text: "Using NaviSphere saved me so much time during my first week of residency. I never get lost finding wards anymore!",
         rating: 5
     },
     {
@@ -18,7 +18,7 @@ const testimonials = [
     {
         name: "Dr. James K.",
         role: "Senior Surgeon",
-        text: "Efficient navigation is crucial in a large hospital. PathPulse helps our new staff integrate seamlessly.",
+        text: "Efficient navigation is crucial in a large hospital. NaviSphere helps our new staff integrate seamlessly.",
         rating: 4
     }
 ];
